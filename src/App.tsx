@@ -1,78 +1,37 @@
-import React from "react";
-
 import { Refine } from "@pankod/refine-core";
 import {
-  notificationProvider,
-  ReadyPage,
-  ErrorComponent,
-  AuthPage,
+    notificationProvider,
+    Layout,
+    ErrorComponent,
 } from "@pankod/refine-antd";
-
-import "@pankod/refine-antd/dist/styles.min.css";
 import routerProvider from "@pankod/refine-react-router-v6";
-import { dataProvider, liveProvider } from "@pankod/refine-supabase";
-import { supabaseClient } from "utility";
-import {
-  Title,
-  Header,
-  Sider,
-  Footer,
-  Layout,
-  OffLayoutArea,
-} from "components/layout";
+import { dataProvider } from "@pankod/refine-supabase";
 import authProvider from "./authProvider";
-
+import { supabaseClient } from "utility";
+import "@pankod/refine-antd/dist/styles.min.css";
+import { Login } from "./login";
 function App() {
-  return (
-    <Refine
-      notificationProvider={notificationProvider}
-      ReadyPage={ReadyPage}
-      catchAll={<ErrorComponent />}
-      dataProvider={dataProvider(supabaseClient)}
-      liveProvider={liveProvider(supabaseClient)}
-      authProvider={authProvider}
-      routerProvider={{
-        ...routerProvider,
-        routes: [
-          {
-            path: "/register",
-            element: <AuthPage type="register" />,
-          },
-          {
-            path: "/forgot-password",
-            element: <AuthPage type="forgotPassword" />,
-          },
-          {
-            path: "/update-password",
-            element: <AuthPage type="updatePassword" />,
-          },
-        ],
-      }}
-      LoginPage={() => (
-        <AuthPage
-          type="login"
-          providers={[
-            {
-              name: "google",
-              label: "Sign in with Google",
-            },
-          ]}
-          formProps={{
-            initialValues: {
-              email: "info@refine.dev",
-              password: "refine-supabase",
-            },
-          }}
+    return (
+        <Refine
+            dataProvider={dataProvider(supabaseClient)}
+            authProvider={authProvider}
+            LoginPage={Login}
+            routerProvider={{
+                ...routerProvider,
+                routes: [
+                    /*
+                    {
+                        element: <Signup />,
+                        path: "/signup",
+                    },
+                    */
+                ] as typeof routerProvider.routes,
+            }}
+            notificationProvider={notificationProvider}
+            Layout={Layout}
+            catchAll={<ErrorComponent />}
         />
-      )}
-      Title={Title}
-      Header={Header}
-      Sider={Sider}
-      Footer={Footer}
-      Layout={Layout}
-      OffLayoutArea={OffLayoutArea}
-    />
-  );
+    );
 }
 
 export default App;
